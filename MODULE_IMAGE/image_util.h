@@ -36,4 +36,18 @@ extern void image_read_pixel(image self, int x, int y, unsigned char* valeur);
 */
 extern void image_write_pixel(image self, int x, int y, unsigned char* valeur);
 
+/**
+* @brief	Dessine un rectance dans l'image
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	self un pointeur d'image, 
+			la macro self permet de simplifier la syntaxe d'accès aux attributs
+* @param	xmin la coordonnée x du point en haut à gauche du rectangle à dessiner
+* @param	ymin la coordonnée y du point en haut à gauche du rectangle à dessiner
+* @param	xmax la coordonnée x du point en bas à droite du rectangle à dessiner
+* @param	ymax la coordonnée y du point en bas à droite du rectangle à dessiner
+* @param 	couleur la couleur du rectangle
+*/
+extern void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned char* couleur);
+
 #endif
