@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "image.h"
+#include "image_util.h"
 
 int main(int argc,char* argv[])
 {
@@ -51,6 +52,22 @@ while(image_pixel_droite(degrade));
 	  sum[0]/nb_pix,
 	  sum[1]/nb_pix,
 	  sum[2]/nb_pix);
+
+  // RAJOUT PAR NOUS
+  unsigned char* relevant = malloc(sizeof(unsigned char) * image_give_dim(degrade));
+
+  /*image_read_pixel(degrade, 100, 100, relevant);
+  printf("j'ai lu : %d %d %d\n", relevant[0], relevant[1], relevant[2]);
+  getchar();*/
+
+  relevant[0] = 'p';
+  relevant[1] = 'o';
+  relevant[2] = 'u';
+  image_write_pixel(degrade, 100, 100, relevant);
+
+  free(relevant);
+  // EO RAJOUT PAR NOUS
+
   image_to_stream(degrade,stdout);
   DEFAIRE_image(degrade);
   return 0;

@@ -2,7 +2,7 @@
 * @file		image_util.h
 * @author	Quentin & Tendry
 * @version	1.0
-* @brief	Contient les prototypes des fonctions du module image
+* @brief	Contient les prototypes des fonctions utilitaires du module image
 */
 
 #ifndef IMAGE_UTIL_H
