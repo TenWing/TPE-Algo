@@ -60,11 +60,11 @@ while(image_pixel_droite(degrade));
   printf("j'ai lu : %d %d %d\n", relevant[0], relevant[1], relevant[2]);
   getchar();*/
 
-  relevant[0] = 'p';
-  relevant[1] = 'o';
-  relevant[2] = 'u';
+  relevant[0] = '0';
+  relevant[1] = '0';
+  relevant[2] = '0';
   image_write_pixel(degrade, 100, 100, relevant);
-
+  draw_square(degrade, 5, 5, 500, 500, relevant);
   free(relevant);
   // EO RAJOUT PAR NOUS
 

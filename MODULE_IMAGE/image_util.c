@@ -66,3 +66,34 @@ void image_write_pixel(image self, int x, int y, unsigned char* valeur)
 
 	free(tab);
 }
+
+void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned char* couleur)
+{
+	int i,j;
+
+	// Vérification des valeurs passées
+	assert(xmin >= 0 && xmin < image_give_largeur(self));
+	assert(ymin >= 0 && ymin < image_give_hauteur(self));
+	assert(xmax >= 0 && xmax < image_give_largeur(self));
+	assert(ymax >= 0 && ymax < image_give_hauteur(self));
+
+	// On se place au bon endroit dans l'image
+	/*Point point_HG;
+	COORDX(point_HG) = xmin;
+	COORDY(point_HG) = ymin;
+
+	image_move_to(self, point_HG);*/
+
+	for (i = xmin; i <= xmax; i++)
+	{
+		image_write_pixel(self,i,ymin,couleur);
+		image_write_pixel(self,i,ymax,couleur);
+	}
+
+	for(j=ymin+1; j<ymax; j++)
+	{
+		image_write_pixel(self,xmin,j,couleur);
+		image_write_pixel(self,xmax,j,couleur);
+	}
+
+}
