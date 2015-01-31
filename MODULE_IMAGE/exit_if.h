@@ -1,3 +1,4 @@
+
 #ifndef EXIT_IF_H
 #define EXIT_IF_H
 #include <stdio.h>
