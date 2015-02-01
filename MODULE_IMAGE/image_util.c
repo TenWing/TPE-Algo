@@ -97,3 +97,8 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 	}
 
 }
+
+void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nb_pixel, double* sum_intensity, double* sum_square_intensity)
+{
+	/* code */
+}
