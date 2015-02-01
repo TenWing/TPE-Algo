@@ -96,7 +96,6 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombre_pixel, double* sum_intensity, double* sum_square_intensity)
 {
 	unsigned char* valeur = malloc(sizeof(unsigned char) * image_give_dim(self));
-	double* actuel = malloc(sizeof(double) * image_give_dim(self));
 	int i,j,k;
 
 	*nombre_pixel = 0;
@@ -117,17 +116,11 @@ void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombr
 
 			for(k=0; k<image_give_dim(self); k++)
 			{
-				actuel[i]= (double) valeur[i];
-				printf("%d,%d,%d\n", valeur[0], valeur[1], valeur[2]);
-				printf("%f; %f, %f\n", actuel[0], actuel[1], actuel[2]);
-getchar();
-				//printf("%f\n", valeur[0]);
-				*(sum_intensity+i)= (double)*(valeur+i)+ *(sum_intensity+i);
-				*(sum_square_intensity+i) = (double)*(sum_square_intensity+i) + *(valeur+i)*(*(valeur+i));
+				*(sum_intensity+k)= (double)*(valeur+k)+ *(sum_intensity+k);
+				*(sum_square_intensity+k) = (double)*(sum_square_intensity+k) + *(valeur+k)*(*(valeur+k));
 			}
 		}
 	}
 
 	free(valeur);
-	free(actuel);
 }
