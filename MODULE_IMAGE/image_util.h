@@ -64,6 +64,6 @@ extern void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsi
 * @param 	sum_intensity somme des intensité dans le rectangle
 * @param 	sum_square_intensity somme des intensité au carré dans le rectangle
 */
-extern void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nb_pixel, double* sum_intensity, double* sum_square_intensity);
+extern void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombre_pixel, double* sum_intensity, double* sum_square_intensity);
 
 #endif

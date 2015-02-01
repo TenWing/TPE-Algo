@@ -53,20 +53,30 @@ while(image_pixel_droite(degrade));
 	  sum[1]/nb_pix,
 	  sum[2]/nb_pix);
 
+
+
+
   // RAJOUT PAR NOUS
   unsigned char* relevant = malloc(sizeof(unsigned char) * image_give_dim(degrade));
+  int* nombre_pixel = NULL;
+  double* sum_intensity;
+  double* sum_square_intensity;
 
-  /*image_read_pixel(degrade, 100, 100, relevant);
-  printf("j'ai lu : %d %d %d\n", relevant[0], relevant[1], relevant[2]);
-  getchar();*/
+  image_read_pixel(degrade,5,5,relevant);
 
-  relevant[0] = '0';
-  relevant[1] = '0';
-  relevant[2] = '0';
-  image_write_pixel(degrade, 100, 100, relevant);
-  draw_square(degrade, 5, 5, 500, 500, relevant);
+  sum_intensity = (double*) malloc(image_give_dim(degrade)*sizeof(double));
+  sum_square_intensity = (double*) malloc(image_give_dim(degrade)*sizeof(double));
+
+  give_moments(degrade, 5, 5, 500, 500, nombre_pixel, sum_intensity, sum_square_intensity);
+
+  getchar();
+
   free(relevant);
-  // EO RAJOUT PAR NOUS
+  free(sum_intensity);
+  free(sum_square_intensity);
+
+  
+  // EO RAJOUT PAR NOUS 
 
   image_to_stream(degrade,stdout);
   DEFAIRE_image(degrade);

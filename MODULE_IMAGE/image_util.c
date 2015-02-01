@@ -77,19 +77,14 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 	assert(xmax >= 0 && xmax < image_give_largeur(self));
 	assert(ymax >= 0 && ymax < image_give_hauteur(self));
 
-	// On se place au bon endroit dans l'image
-	/*Point point_HG;
-	COORDX(point_HG) = xmin;
-	COORDY(point_HG) = ymin;
-
-	image_move_to(self, point_HG);*/
-
+	//On dessine les lignes horizontales
 	for (i = xmin; i <= xmax; i++)
 	{
 		image_write_pixel(self,i,ymin,couleur);
 		image_write_pixel(self,i,ymax,couleur);
 	}
 
+	//On dessine les lignes verticales
 	for(j=ymin+1; j<ymax; j++)
 	{
 		image_write_pixel(self,xmin,j,couleur);
@@ -98,7 +93,41 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 
 }
 
-void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nb_pixel, double* sum_intensity, double* sum_square_intensity)
+void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombre_pixel, double* sum_intensity, double* sum_square_intensity)
 {
-	/* code */
+	unsigned char* valeur = malloc(sizeof(unsigned char) * image_give_dim(self));
+
+/*
+
+	double* actuel = malloc(sizeof(double)*image_give_dim(self))	;
+
+	*(nombre_pixel) = 0;
+
+	for(i=0; i<3; i++)
+	{
+		*(sum_intensity+i) = 0.0;
+		*(sum_square_intensity + i) = 0.0;
+	}
+
+
+	for(i=xmin+1; i<xmax; i++)
+	{
+		for(j=ymin+1; j<ymax; j++)
+		{
+			*(nombre_pixel) = *(nombre_pixel) +1;
+			image_read_pixel(self,i,j,valeur);
+
+			for(k=0; k<3; k++)
+			{
+
+				*(actuel+i)=*(valeur+i);
+				*(sum_intensity+i)= *(actuel+i)+ *(sum_intensity+i);
+				*(sum_square_intensity+i) = *(sum_square_intensity+i) + *(actuel+i)*(*(actuel+i));
+			}
+			printf("%f\n", sum_intensity[2]);
+			getchar();
+		}
+	}
+	*/
+
 }
