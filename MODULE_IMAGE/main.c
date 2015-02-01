@@ -58,7 +58,7 @@ while(image_pixel_droite(degrade));
 
   // RAJOUT PAR NOUS
   unsigned char* relevant = malloc(sizeof(unsigned char) * image_give_dim(degrade));
-  int* nombre_pixel = NULL;
+  int* nombre_pixel = malloc(sizeof(int));
   double* sum_intensity;
   double* sum_square_intensity;
 
@@ -68,10 +68,11 @@ while(image_pixel_droite(degrade));
   sum_square_intensity = (double*) malloc(image_give_dim(degrade)*sizeof(double));
 
   give_moments(degrade, 5, 5, 500, 500, nombre_pixel, sum_intensity, sum_square_intensity);
-
+  printf("%d, %lf, %lf\n", *nombre_pixel, sum_intensity[2], sum_square_intensity[2]);
   getchar();
 
   free(relevant);
+  free(nombre_pixel);
   free(sum_intensity);
   free(sum_square_intensity);
 
