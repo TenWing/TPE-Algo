@@ -98,7 +98,7 @@ void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombr
 	unsigned char* valeur = malloc(sizeof(unsigned char) * image_give_dim(self));
 	int i,j,k;
 
-	*nombre_pixel = 0;
+	*nombre_pixel = (xmax - xmin)*(ymax-ymin);
 
 	for(i=0; i<image_give_dim(self); i++)
 	{
@@ -121,6 +121,46 @@ void give_moments(image self, int xmin, int ymin, int xmax, int ymax, int* nombr
 			}
 		}
 	}
-
+		
 	free(valeur);
 }
+
+
+// Code de give_moments avec les fonctions du prof 
+
+/*
+//On se place sur le bord haut gauche du rectangle
+	Point point;
+	COORDY(point) = ymin;
+	COORDX(point)=xmin;
+
+  	image_move_to(self, &point);
+
+  	//On parcourt le rectangle
+ 	do
+    {
+      	do
+		{
+			//On lit le pixel courant
+			//image_read_pixel(self,COORDX(point),COORDY(point),valeur);
+
+			//On incrémente les moments en fonction du pixel lu
+			for(k=0; k<image_give_dim(self); k++)
+			{
+				*(sum_intensity+k)= (double)*(valeur+k)+ *(sum_intensity+k);
+				*(sum_square_intensity+k) = (double)*(sum_square_intensity+k) + *(valeur+k)*(*(valeur+k));
+			}
+
+			//On incrémente la coordonnée x pour se déplacer sur le gauche
+			COORDX(point)++;
+		}
+    	while(image_pixel_droite(self) && ( COORDX(point) <=xmax)); On  parcourt la ligne de gauche à droite 
+    																		en restant dans le rectangle
+    	//On revient au xmin et on incremente d'une ligne
+     	COORDX(point) = xmin;
+		COORDY(point) = ymin +1;
+ 	  printf("%d\n", j++); 
+    }
+  	while(image_pixel_suivant(self) && ( COORDY(point) <=ymax)); On passe à la ligne suivante
+  																	 en restant dans le rectangle
+*/
