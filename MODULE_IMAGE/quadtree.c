@@ -12,6 +12,7 @@
 #include "image.h"
 #include "point.h"
 #include "image_util.h"
+#include "quadtree.h"
 
 /**
 * @brief	Structure des quadtree
@@ -29,11 +30,22 @@ struct quadtree
 
 extern quadtree create_quadtree()
 {
-	quadtree q;
+	INSTANCIER(quadtree);
+
 	int i;
 
-	q->sons = malloc(4 * sizeof(quadtree));
-	q->M0 = 0;
+	for (i = 0; i < 4; i++)
+	{
+		self->sons[i] = NULL;
+	}
+	
+
+	return self;
+}
+
+extern void quadtree_subdivide(quadtree q)
+{
+	/*q->M0 = 0;
 
 	for (i = 0; i < 3; i++)
 	{
@@ -42,19 +54,12 @@ extern quadtree create_quadtree()
 	}
 
 	q->xmin = 0;
-	q->xmin = 0;
-	q->xmin = 0;
-	q->xmin = 0;
-
-	return quadtree;
+	q->ymin = 0;
+	q->xmax = 0;
+	q->ymax = 0;*/
 }
 
-extern void quadtree_subdivide(quadtree)
+extern void delete_quadtree(quadtree q)
 {
 
-}
-
-extern void delete_quadtree(quadtree)
-{
-	
 }

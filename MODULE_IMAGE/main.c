@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "image.h"
 #include "image_util.h"
+#include "quadtree.h"
 
 int main(int argc,char* argv[])
 {
@@ -61,6 +62,7 @@ while(image_pixel_droite(degrade));
   int* nombre_pixel = malloc(sizeof(int));
   double* sum_intensity;
   double* sum_square_intensity;
+  quadtree q;
 
   image_read_pixel(degrade,5,5,relevant);
 
@@ -71,6 +73,8 @@ while(image_pixel_droite(degrade));
   printf("%d, %lf, %lf\n", *nombre_pixel, sum_intensity[2], sum_square_intensity[2]);
   getchar();
 
+  q = create_quadtree();
+  getchar();
   free(relevant);
   free(nombre_pixel);
   free(sum_intensity);

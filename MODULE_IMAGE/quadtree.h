@@ -5,13 +5,19 @@
 * @brief	Contient les prototypes des fonctions utilitaires pour les quadtree
 */
 
-#ifndef IMAGE_UTIL_H
-#define IMAGE_UTIL_H
+#ifndef QUADTREE_H
+#define QUADTREE_H
+
+#include "objet.h"
+#include "classe.h"
+
+#include "point.h"
+#include "move_type.h"
 
 CLASSE(quadtree);
 
 extern quadtree create_quadtree();
-extern void quadtree_subdivide(quadtree);
-extern void delete_quadtree(quadtree);
+extern void quadtree_subdivide(quadtree q);
+extern void delete_quadtree(quadtree q);
 
 #endif
