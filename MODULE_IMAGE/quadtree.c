@@ -18,7 +18,7 @@
 * @author	Quentin & Tendry
 * @version	1.0
 */
-typedef struct quadtree Quadtree;
+
 struct quadtree
 {
 	quadtree sons[4];
@@ -27,4 +27,7 @@ struct quadtree
 };
 
 
+extern quadtree create_quadtree()
+{
 
+}
