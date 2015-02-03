@@ -10,4 +10,6 @@
 
 CLASSE(quadtree);
 
+extern quadtree create_quadtree();
+
 #endif

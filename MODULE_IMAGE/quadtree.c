@@ -29,5 +29,22 @@ struct quadtree
 
 extern quadtree create_quadtree()
 {
+	quadtree q;
+	int i;
 
+	q->sons = malloc(4 * sizeof(quadtree));
+	q->M0 = 0;
+
+	for (i = 0; i < 3; i++)
+	{
+		q->M1[i] = 0;
+		q->M2[i] = 0;
+	}
+
+	q->xmin = 0;
+	q->xmin = 0;
+	q->xmin = 0;
+	q->xmin = 0;
+
+	return quadtree;
 }
