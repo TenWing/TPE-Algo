@@ -20,7 +20,6 @@
 * @author	Quentin & Tendry
 * @version	1.0
 */
-
 struct quadtree
 {
 	quadtree sons[4];
@@ -91,6 +90,7 @@ extern void delete_quadtree(quadtree q)
 
 }
 
+<<<<<<< HEAD
 //(quadtree) malloc( 4 * sizeof(quadtree));
 /*
 struct point
@@ -99,3 +99,14 @@ struct point
   int coordy;
 };
 */
+=======
+quadtree split_image(image image, double seuil)
+{
+
+}
+
+void draw_quadtree(image image, quadtree arbre, unsigned char* couleur)
+{
+	
+}
+>>>>>>> 61cb22d400ba2c66176a45b30cc01a4e33d71e77
