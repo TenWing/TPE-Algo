@@ -19,7 +19,6 @@
 * @author	Quentin & Tendry
 * @version	1.0
 */
-
 struct quadtree
 {
 	quadtree sons[4];
@@ -62,4 +61,14 @@ extern void quadtree_subdivide(quadtree q)
 extern void delete_quadtree(quadtree q)
 {
 
+}
+
+quadtree split_image(image image, double seuil)
+{
+
+}
+
+void draw_quadtree(image image, quadtree arbre, unsigned char* couleur)
+{
+	
 }
