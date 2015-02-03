@@ -48,3 +48,13 @@ extern quadtree create_quadtree()
 
 	return quadtree;
 }
+
+extern void quadtree_subdivide(quadtree)
+{
+
+}
+
+extern void delete_quadtree(quadtree)
+{
+	
+}

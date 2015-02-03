@@ -11,5 +11,7 @@
 CLASSE(quadtree);
 
 extern quadtree create_quadtree();
+extern void quadtree_subdivide(quadtree);
+extern void delete_quadtree(quadtree);
 
 #endif
