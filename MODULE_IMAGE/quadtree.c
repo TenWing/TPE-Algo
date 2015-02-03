@@ -10,6 +10,7 @@
 #include <assert.h>
 
 #include "image.h"
+#include "objet.h"
 #include "point.h"
 #include "image_util.h"
 #include "quadtree.h"
@@ -24,7 +25,7 @@ struct quadtree
 {
 	quadtree sons[4];
 	double M0,M1[3],M2[3];
-	int xmin,ymin,xmax,ymax;
+	Point supgauche, infdroit;
 };
 
 
@@ -37,29 +38,64 @@ extern quadtree create_quadtree()
 	for (i = 0; i < 4; i++)
 	{
 		self->sons[i] = NULL;
-	}
-	
+	}	
 
 	return self;
 }
 
 extern void quadtree_subdivide(quadtree q)
 {
-	/*q->M0 = 0;
+	int i;
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 	{
-		q->M1[i] = 0;
-		q->M2[i] = 0;
+		q->sons[i] = create_quadtree();
 	}
 
-	q->xmin = 0;
-	q->ymin = 0;
-	q->xmax = 0;
-	q->ymax = 0;*/
+/*	for (i=0; i < 4; i++)
+	{
+		switch(i)
+		{
+			case 0 :
+				q->sons[i]->supgauche.coordx = q->supgauche.coordx;
+				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
+				q->sons[i]->infdroit.coordx = q->infdroit.coordx/2;
+				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
+				break;
+			case 1 : 
+				q->sons[i]->supgauche.coordx = q->supgauche.coordx/2;
+				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
+				q->sons[i]->infdroit.coordx = q->infdroit.coordx;
+				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
+				break;
+			case 2 : 
+				q->sons[i]->supgauche.coordx = q->supgauche.coordx/2;
+				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
+				q->sons[i]->infdroit.coordx = q->infdroit.coordx;
+				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
+				break;
+			case 3 : 
+				q->sons[i]->supgauche.coordx = q->supgauche.coordx;
+				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
+				q->sons[i]->infdroit.coordx = q->infdroit.coordx/2;
+				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
+				break;
+			default :
+				break;
+		}
+	}*/
 }
 
 extern void delete_quadtree(quadtree q)
 {
 
 }
+
+//(quadtree) malloc( 4 * sizeof(quadtree));
+/*
+struct point
+{
+  int coordx;
+  int coordy;
+};
+*/
