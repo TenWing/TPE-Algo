@@ -16,8 +16,28 @@
 
 CLASSE(quadtree);
 
+/**
+* @brief	crée un quadtree 
+* @author	Quentin & Tendry
+* @version	1.0
+* @return	un quadtree
+*/
 extern quadtree create_quadtree();
+
+/**
+* @brief	initialise le quadtree
+* @author	Quentin & Tendry
+* @version	1.0
+* @param	quadtree le quadtree à initialiser
+*/
 extern void quadtree_subdivide(quadtree q);
+
+/**
+* @brief	détruit un quadtree (ses feuilles et sa racine)
+* @author	Quentin & Tendry
+* @version	1.0
+* @param	quadtree le quadtree à détruire
+*/
 extern void delete_quadtree(quadtree q);
 
 /**

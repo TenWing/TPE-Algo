@@ -15,6 +15,7 @@
 #include "image_util.h"
 #include "quadtree.h"
 
+
 /**
 * @brief	Structure des quadtree
 * @author	Quentin & Tendry
@@ -37,6 +38,7 @@ extern quadtree create_quadtree()
 	for (i = 0; i < 4; i++)
 	{
 		self->sons[i] = NULL;
+		
 	}	
 
 	return self;
@@ -90,16 +92,6 @@ extern void delete_quadtree(quadtree q)
 
 }
 
-<<<<<<< HEAD
-//(quadtree) malloc( 4 * sizeof(quadtree));
-/*
-struct point
-{
-  int coordx;
-  int coordy;
-};
-*/
-=======
 quadtree split_image(image image, double seuil)
 {
 
@@ -109,4 +101,4 @@ void draw_quadtree(image image, quadtree arbre, unsigned char* couleur)
 {
 	
 }
->>>>>>> 61cb22d400ba2c66176a45b30cc01a4e33d71e77
+
