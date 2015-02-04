@@ -74,6 +74,9 @@ while(image_pixel_droite(degrade));
   getchar();
 
   q = create_quadtree();
+
+  quadtree_subdivide(q);
+
   getchar();
   free(relevant);
   free(nombre_pixel);

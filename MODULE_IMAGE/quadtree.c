@@ -29,31 +29,25 @@ struct quadtree
 };
 
 
-extern quadtree create_quadtree()
+quadtree create_quadtree()
 {
 	INSTANCIER(quadtree);
-
-	int i;
-
-	for (i = 0; i < 4; i++)
-	{
-		self->sons[i] = NULL;
-		
-	}	
 
 	return self;
 }
 
-extern void quadtree_subdivide(quadtree q)
+void quadtree_subdivide(quadtree q)
 {
 	int i;
 
+	//On initialise les quadtree de chaque fils
 	for (i = 0; i < 4; i++)
 	{
 		q->sons[i] = create_quadtree();
 	}
 
-/*	for (i=0; i < 4; i++)
+	//On définit la taille de chaque fils
+	for (i=0; i < 4; i++)
 	{
 		switch(i)
 		{
@@ -84,12 +78,28 @@ extern void quadtree_subdivide(quadtree q)
 			default :
 				break;
 		}
-	}*/
+	}
 }
 
-extern void delete_quadtree(quadtree q)
+void delete_quadtree(quadtree q)
 {
-
+	//Descente dans l'arbre
+	if(q->sons[0] != NULL)
+	{
+		delete_quadtree(q->sons[0]);
+		delete_quadtree(q->sons[1]);
+		delete_quadtree(q->sons[2]);
+		delete_quadtree(q->sons[3]);
+	}
+	//Libération de la mémoire
+	else
+	{
+		free(q->sons[0]);
+		free(q->sons[1]);
+		free(q->sons[2]);
+		free(q->sons[3]);
+		free(q);
+	}
 }
 
 quadtree split_image(image image, double seuil)

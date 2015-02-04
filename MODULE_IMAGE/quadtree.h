@@ -16,6 +16,8 @@
 
 CLASSE(quadtree);
 
+
+
 /**
 * @brief	crée un quadtree 
 * @author	Quentin & Tendry
