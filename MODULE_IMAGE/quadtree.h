@@ -50,7 +50,7 @@ extern void delete_quadtree(quadtree q);
 * @param	double seuil la valeur de seuil pour le découpage
 * @return	un quadtree
 */
-extern quadtree split_image(image image, double seuil);
+extern quadtree split_image(image self, double seuil);
 
 /**
 * @brief	affiche les bordures dans l'image correspondant aux découpages du quad tree
@@ -60,6 +60,6 @@ extern quadtree split_image(image image, double seuil);
 * @param	quadtree l'arbre pour dessiner les bords
 * @param 	couleur la couleur des bords
 */
-extern void draw_quadtree(image image, quadtree arbre, unsigned char* couleur);
+extern void draw_quadtree(image self, quadtree arbre, unsigned char* couleur);
 
 #endif

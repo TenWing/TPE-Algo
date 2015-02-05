@@ -22,6 +22,6 @@ image_util.o: image.c image_util.c image.h objet.h exit_if.h classe.h point.h mo
   type_obj.h
 			$(CC) $(CFLAG) -c image_util.c image.c
 
-quadtree.o: quadtree.c image_util.c image.h objet.h exit_if.h classe.h point.h move_type.h \
+quadtree.o: image.c quadtree.c image_util.c  image.h objet.h exit_if.h classe.h point.h move_type.h \
   type_obj.h
-			$(CC) $(CFLAG) -c image_util.c quadtree.c
+			$(CC) $(CFLAG) -c image.c image_util.c quadtree.c 

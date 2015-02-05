@@ -75,8 +75,9 @@ while(image_pixel_droite(degrade));
 
   q = create_quadtree();
 
+  printf("%p\n", q);
   quadtree_subdivide(q);
-
+ // printf("%p\n", q->sons[0]);
   getchar();
   free(relevant);
   free(nombre_pixel);

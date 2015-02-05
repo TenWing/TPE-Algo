@@ -102,12 +102,14 @@ void delete_quadtree(quadtree q)
 	}
 }
 
-quadtree split_image(image image, double seuil)
+quadtree split_image(image self, double seuil)
 {
+	//quadtree arbre = create_quadtree();
 
+	//give_moments(self,1, 1, self->largeur, self->hauteur, &(arbre->M0), arbre->M1, arbre->M2);
 }
 
-void draw_quadtree(image image, quadtree arbre, unsigned char* couleur)
+void draw_quadtree(image self, quadtree arbre, unsigned char* couleur)
 {
 	
 }
