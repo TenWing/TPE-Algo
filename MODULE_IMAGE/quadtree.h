@@ -16,15 +16,17 @@
 
 CLASSE(quadtree);
 
-
-
 /**
 * @brief	crée un quadtree 
 * @author	Quentin & Tendry
-* @version	1.0
+* @param 	supGaucheX la coordonné x du point en haut a gauche
+* @param 	supGaucheY la coordonné y du point en haut a gauche
+* @param 	infDroitX la coordonné x du point en bas a droite
+* @param 	infDroitY la coordonné y du point en bas a droite
+* @version	2.0
 * @return	un quadtree
 */
-extern quadtree create_quadtree();
+extern quadtree create_quadtree(int supGaucheX, int supGaucheY, int infDroitX, int infDroitY);
 
 /**
 * @brief	initialise le quadtree
