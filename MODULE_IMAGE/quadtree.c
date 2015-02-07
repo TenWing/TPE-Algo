@@ -15,6 +15,31 @@
 #include "image_util.h"
 #include "quadtree.h"
 
+/**
+* @brief 	les positions des fils par rapport au père
+* @author	Quentin & Tendry
+*/
+typedef enum Place Place;
+enum Place
+{
+	HG = 0,
+	HD = 1,
+	BG = 2,
+	BD = 3
+};
+
+// #########################################
+// FONCTIONS PRIVEES DU MODULE QUADTREE
+
+/**
+* @brief 	crée un fils par rapport à son père
+* @author	Quentin & Tendry
+* @param 	q le quadtree père du fils créé
+* @param 	p la place du fils par rapport au père
+* @return 	un fils quadtree bien construit
+*/
+quadtree create_son(quadtree q, Place p);
+// #########################################
 
 /**
 * @brief	Structure des quadtree
@@ -29,9 +54,24 @@ struct quadtree
 };
 
 
-quadtree create_quadtree()
+quadtree create_quadtree(int supGaucheX, int supGaucheY, int infDroitX, int infDroitY)
 {
+	int i =0;
+
+	// Création du quadtree
 	INSTANCIER(quadtree);
+
+	// On va mettre a null chaque fils
+	for(i = 0; i < 4; i++)
+	{
+		self->sons[i] = NULL;
+	}
+
+	// Enfin on initialise les points du noeud
+	self->supgauche.coordx = supGaucheX;
+	self->supgauche.coordy = supGaucheY;
+	self->infdroit.coordx = infDroitX;
+	self->infdroit.coordy = infDroitY;
 
 	return self;
 }
@@ -43,41 +83,7 @@ void quadtree_subdivide(quadtree q)
 	//On initialise les quadtree de chaque fils
 	for (i = 0; i < 4; i++)
 	{
-		q->sons[i] = create_quadtree();
-	}
-
-	//On définit la taille de chaque fils
-	for (i=0; i < 4; i++)
-	{
-		switch(i)
-		{
-			case 0 :
-				q->sons[i]->supgauche.coordx = q->supgauche.coordx;
-				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
-				q->sons[i]->infdroit.coordx = q->infdroit.coordx/2;
-				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
-				break;
-			case 1 : 
-				q->sons[i]->supgauche.coordx = q->supgauche.coordx/2;
-				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
-				q->sons[i]->infdroit.coordx = q->infdroit.coordx;
-				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
-				break;
-			case 2 : 
-				q->sons[i]->supgauche.coordx = q->supgauche.coordx/2;
-				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
-				q->sons[i]->infdroit.coordx = q->infdroit.coordx;
-				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
-				break;
-			case 3 : 
-				q->sons[i]->supgauche.coordx = q->supgauche.coordx;
-				q->sons[i]->supgauche.coordy = q->supgauche.coordy;
-				q->sons[i]->infdroit.coordx = q->infdroit.coordx/2;
-				q->sons[i]->infdroit.coordy = q->infdroit.coordy/2;
-				break;
-			default :
-				break;
-		}
+		q->sons[i] = create_son(q, i);
 	}
 }
 
@@ -114,3 +120,50 @@ void draw_quadtree(image self, quadtree arbre, unsigned char* couleur)
 	
 }
 
+quadtree create_son(quadtree q, Place p)
+{
+	// On teste bien que le père soit initialisé
+	assert(q != NULL);
+
+	// le fils
+	quadtree fils = NULL;
+
+	// Traitement différent en fonction de la place
+	switch(p)
+	{
+		// En fonction de la place la zone qu'occupe le fils
+		// est différente
+		case HG :			
+			fils = create_quadtree(COORDX(q->supgauche),
+			 COORDY(q->supgauche), COORDX(q->infdroit)/2, 
+			 COORDY(q->infdroit)/2);
+			break;
+
+		case HD : 
+			fils = create_quadtree(COORDX(q->infdroit)/2,
+			 COORDY(q->supgauche)/2, COORDX(q->infdroit), 
+			 COORDY(q->infdroit)/2);
+			break;
+
+		case BG : 
+			fils = create_quadtree(COORDX(q->supgauche),
+			 COORDY(q->infdroit)/2, COORDX(q->infdroit)/2, 
+			 COORDY(q->infdroit));
+			break;
+
+		case BD : 
+			fils = create_quadtree(COORDX(q->infdroit)/2,
+			 COORDY(q->infdroit)/2, COORDX(q->infdroit), 
+			 COORDY(q->infdroit));
+			break;
+
+		default :
+			break;
+	}
+
+	printf("%d %d // %d %d\n", fils->supgauche.coordx,
+		fils->supgauche.coordy, fils->infdroit.coordx,
+		fils->infdroit.coordy);
+
+	return fils;
+}
