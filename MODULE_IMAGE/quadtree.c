@@ -110,14 +110,37 @@ void delete_quadtree(quadtree q)
 
 quadtree split_image(image self, double seuil)
 {
-	//quadtree arbre = create_quadtree();
+	//On vérifie que l'image n'es pas nulle
+	assert(self != NULL);
 
-	//give_moments(self,1, 1, self->largeur, self->hauteur, &(arbre->M0), arbre->M1, arbre->M2);
+	//On déclare et initialise deux entiers
+	int hauteur_image, largeur_image;
+
+	largeur_image = image_give_largeur(self);
+	hauteur_image = image_give_hauteur(self);
+
+	//Création d'un quadtree
+	quadtree q = create_quadtree(0, 0, largeur_image, hauteur_image );
+
+	//Fonction de récurrence pour initialiser tout le quadtree
+	split_image_sons(self,seuil,q);
+
+	return q;
 }
 
 void draw_quadtree(image self, quadtree arbre, unsigned char* couleur)
 {
-	
+	assert(self != NULL);
+
+	if(arbre != NULL)
+	{
+		//Dessine le rectangle dans la zone du quadtree
+		draw_square(self, COORDX(arbre->supgauche), COORDY(arbre->supgauche), COORDX(arbre->infdroit), COORDY(arbre->infdroit), couleur);
+
+		draw_quadtree(self,arbre->sons[0],couleur);
+		draw_quadtree(self,arbre->sons[3],couleur);
+		
+	}
 }
 
 quadtree create_son(quadtree q, Place p)
@@ -161,9 +184,53 @@ quadtree create_son(quadtree q, Place p)
 			break;
 	}
 
-	printf("%d %d // %d %d\n", fils->supgauche.coordx,
+	/*printf("%d %d // %d %d\n", fils->supgauche.coordx,
 		fils->supgauche.coordy, fils->infdroit.coordx,
-		fils->infdroit.coordy);
+		fils->infdroit.coordy);*/
 
 	return fils;
+}
+
+void split_image_sons(image self, double seuil, quadtree q)
+{
+	int j;
+	int* nb_pixel;
+	double* a,*b;
+	double var[3];
+	double compare[3];
+
+	nb_pixel = (int*) malloc(sizeof(int));
+	a = (double*) malloc (sizeof(double) * image_give_dim(self));
+	b = (double*) malloc (sizeof(double) * image_give_dim(self));
+
+	//On calcule les moments de l'image prédéfini
+	give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), COORDX(q->infdroit), COORDY(q->infdroit), nb_pixel, a,b);
+	
+	q->M0 = *nb_pixel;
+
+	for (j=0; j<3;j++)
+	{
+		q->M1[j] = *(a+j);
+		q->M2[j] = *(b+j);
+		var[j] = (q->M2[j] - q->M1[j]*q->M1[j]/q->M0)/q->M0;
+		compare[j] = var[j] - seuil;
+	}
+	
+	//On vérifie si la variance est bien supérieure au seuil
+	if( compare[0] > 0 && compare[1] > 0 && compare[2] > 0 )
+	{
+		//On vérifie que des moments sont calculables pour la récurrence
+		if(COORDX(q->supgauche) != COORDX(q->infdroit)-1 && COORDY(q->supgauche) != COORDY(q->infdroit)-1)
+		{
+			quadtree_subdivide(q);
+			split_image_sons(self,seuil,q->sons[0]);
+			split_image_sons(self,seuil,q->sons[1]);
+			split_image_sons(self,seuil,q->sons[2]);
+			split_image_sons(self,seuil,q->sons[3]);
+		}
+	}
+
+	free(b);
+	free(a);
+	free(nb_pixel);
 }

@@ -64,4 +64,14 @@ extern quadtree split_image(image self, double seuil);
 */
 extern void draw_quadtree(image self, quadtree arbre, unsigned char* couleur);
 
+/**
+* @brief	crée les fils d'un quadtree en découpant une image avec des arguments de seuil
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	image l'image modifiée
+* @param	quadtree l'arbre pour dessiner les bords
+* @param 	seuil 	le sueil minimal pour initialiser les moments
+*/
+void split_image_sons(image self, double seuil, quadtree q);
+
 #endif

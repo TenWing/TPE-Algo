@@ -7,8 +7,10 @@
 
 int main(int argc,char* argv[])
 {
-  /*
+
   image degrade=FAIRE_image();
+  //image_initialize(degrade,3,512,512);
+   
   int color[3]={255,0,0};
   int col[3];
   int bleu[]={0,0,255};
@@ -59,17 +61,20 @@ while(image_pixel_droite(degrade));
 
 
 
-  */
-  // RAJOUT PAR NOUS
-  quadtree q = create_quadtree(0, 0, 480, 480);
+  
+  // RAJOUT PAR NOUS  
+  quadtree q;
 
-  quadtree_subdivide(q);
+  q=split_image(degrade, 4000);
+
+ // draw_quadtree(degrade, q, 0);
+
   delete_quadtree(q); 
 
   free(q);
   // EO RAJOUT PAR NOUS 
 
   // image_to_stream(degrade,stdout);
-  // DEFAIRE_image(degrade);
+   DEFAIRE_image(degrade);
   return 0;
 }
