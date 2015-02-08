@@ -54,24 +54,31 @@ while(image_pixel_droite(degrade));
 	sum[i]+=pix[i];
     }
   while(image_pixel_suivant(degrade));
-  fprintf(stderr,"moyenne: (%f,%f,%f)\n",
+ /* fprintf(stderr,"moyenne: (%f,%f,%f)\n",
 	  sum[0]/nb_pix,
 	  sum[1]/nb_pix,
 	  sum[2]/nb_pix);
-
+*/
 
 
   
   // RAJOUT PAR NOUS  
   quadtree q;
+  unsigned char* couleur;
+  couleur = (unsigned char*) malloc(sizeof(couleur) * 3);
+  couleur[0] = 0;
+  couleur[1] = 0;
+  couleur[2] = 0;
 
-  q=split_image(degrade, 4000);
+  q=create_default_quadtree(0,0,512,512,6);
 
- // draw_quadtree(degrade, q, 0);
+  init_quadtree(q,degrade);
 
-  delete_quadtree(q); 
+  update_quadtree( q, degrade, 4000);
 
-  free(q);
+ // delete_quadtree(q); 
+
+  //free(q);
   // EO RAJOUT PAR NOUS 
 
   // image_to_stream(degrade,stdout);

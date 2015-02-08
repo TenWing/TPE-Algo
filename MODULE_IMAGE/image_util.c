@@ -77,8 +77,9 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 	assert(xmax >= 0 && xmax < image_give_largeur(self));
 	assert(ymax >= 0 && ymax < image_give_hauteur(self));
 
+
 	//On dessine les lignes horizontales
-	for (i = xmin; i <= xmax; i++)
+	for (i = xmin; i < xmax; i++)
 	{
 		image_write_pixel(self,i,ymin,couleur);
 		image_write_pixel(self,i,ymax,couleur);

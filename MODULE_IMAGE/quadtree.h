@@ -74,4 +74,45 @@ extern void draw_quadtree(image self, quadtree arbre, unsigned char* couleur);
 */
 void split_image_sons(image self, double seuil, quadtree q);
 
+/**
+* @brief	vérifie si l'arbre est vide ou non
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	quadtree le quadtree a vérifier
+*/
+booleen est_vide(quadtree arbre);
+
+/**
+* @brief	créé un arbre d'une certaine hauteur
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	hauteur  	la hauteur de l'arbre à faire
+* @param 	xmin 		coordonnées x du point en haut à gauche de l'image
+* @param 	ymin 		coordonnées y du point en haut à gauche de l'image
+* @param 	xmax 		coordonnées x du point en bas à droite de l'image
+* @param 	ymax 		coordonnées x du point en bas à droite de l'image
+*/
+extern quadtree create_default_quadtree(int xmin, int ymin, int xmax, int ymax, int hauteur);
+
+/**
+* @brief	initialise les moments des feuilles d’un quadtree à partir de l’image puis en d ́eduit les moments de tous les noeuds.
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	quadtree  le quadtree à initialiser
+* @param 	image 	  l'image pour l'initialisation
+*/
+extern void init_quadtree(quadtree q,image self);
+
+/**
+* @brief	supprime l’ensemble des fils d’un noeud dont la 
+*			variance est inférieure au seuil passé en 3 eme argument et découpe toute
+*			feuille dont la variance est supérieure au même seuil.
+* @author	Quentin & Tendry
+* @version	1.0
+* @param 	quadtree  le quadtree à mettre à jour
+* @param 	image 	  l'image pour mettre à jour
+* @param	seuil 	  le seuil pour la mise à jour
+*/
+extern void update_quadtree(quadtree q, image self, double seuil);
+
 #endif

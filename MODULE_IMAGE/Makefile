@@ -1,11 +1,12 @@
 CC=gcc
 CFLAG=-Wall -g
 LIBS=-L
+LDFLAGS= -lm
 OBJ=main.o image.o image_util.o quadtree.o
 OUTPUT=testimage
 
 $(OUTPUT): $(OBJ)
-	$(CC) $(OBJ) -o $@ $(LIBS) -limage32 
+	$(CC) $(OBJ) -o $@ $(LIBS) -limage32 $(LDFLAGS)
 
 clean:
 	rm -f $(OUTPUT) $(OBJ)

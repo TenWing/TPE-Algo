@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 
 #include "image.h"
 #include "objet.h"
 #include "point.h"
 #include "image_util.h"
 #include "quadtree.h"
+#include "type_obj.h"
 
 /**
 * @brief 	les positions des fils par rapport au père
@@ -131,15 +133,22 @@ quadtree split_image(image self, double seuil)
 void draw_quadtree(image self, quadtree arbre, unsigned char* couleur)
 {
 	assert(self != NULL);
+	assert(arbre != NULL);
 
-	if(arbre != NULL)
+	if(!est_vide(arbre))
 	{
-		//Dessine le rectangle dans la zone du quadtree
-		draw_square(self, COORDX(arbre->supgauche), COORDY(arbre->supgauche), COORDX(arbre->infdroit), COORDY(arbre->infdroit), couleur);
-
 		draw_quadtree(self,arbre->sons[0],couleur);
+		draw_quadtree(self,arbre->sons[1],couleur);
+		draw_quadtree(self,arbre->sons[2],couleur);
 		draw_quadtree(self,arbre->sons[3],couleur);
-		
+
+	}
+	else
+	{
+		draw_square(self, COORDX(arbre->supgauche), COORDY(arbre->supgauche),
+			COORDX(arbre->infdroit)-1, COORDY(arbre->infdroit)-1, couleur);
+
+
 	}
 }
 
@@ -158,35 +167,35 @@ quadtree create_son(quadtree q, Place p)
 		// est différente
 		case HG :			
 			fils = create_quadtree(COORDX(q->supgauche),
-			 COORDY(q->supgauche), COORDX(q->infdroit)/2, 
-			 COORDY(q->infdroit)/2);
+			 COORDY(q->supgauche), 
+			 COORDX(q->supgauche)/2 + COORDX(q->infdroit)/2, 
+			 COORDY(q->supgauche)/2 + COORDY(q->infdroit)/2);
 			break;
 
 		case HD : 
-			fils = create_quadtree(COORDX(q->infdroit)/2,
-			 COORDY(q->supgauche)/2, COORDX(q->infdroit), 
-			 COORDY(q->infdroit)/2);
+			fils = create_quadtree(COORDX(q->supgauche)/2 + COORDX(q->infdroit)/2,
+			 COORDY(q->supgauche), 
+			 COORDX(q->infdroit), 
+			 COORDY(q->supgauche)/2 + COORDY(q->infdroit)/2);
 			break;
 
 		case BG : 
 			fils = create_quadtree(COORDX(q->supgauche),
-			 COORDY(q->infdroit)/2, COORDX(q->infdroit)/2, 
+			 COORDY(q->supgauche)/2 + COORDY(q->infdroit)/2, 
+			 COORDX(q->supgauche)/2 + COORDX(q->infdroit)/2, 
 			 COORDY(q->infdroit));
 			break;
 
 		case BD : 
-			fils = create_quadtree(COORDX(q->infdroit)/2,
-			 COORDY(q->infdroit)/2, COORDX(q->infdroit), 
+			fils = create_quadtree(COORDX(q->infdroit)/2 + COORDX(q->supgauche)/2,
+			 COORDY(q->infdroit)/2 + COORDY(q->supgauche)/2,
+			 COORDX(q->infdroit), 
 			 COORDY(q->infdroit));
 			break;
 
 		default :
 			break;
 	}
-
-	/*printf("%d %d // %d %d\n", fils->supgauche.coordx,
-		fils->supgauche.coordy, fils->infdroit.coordx,
-		fils->infdroit.coordy);*/
 
 	return fils;
 }
@@ -196,8 +205,8 @@ void split_image_sons(image self, double seuil, quadtree q)
 	int j;
 	int* nb_pixel;
 	double* a,*b;
-	double var[3];
-	double compare[3];
+	double var[3],variance;
+	double compare;
 
 	nb_pixel = (int*) malloc(sizeof(int));
 	a = (double*) malloc (sizeof(double) * image_give_dim(self));
@@ -213,11 +222,18 @@ void split_image_sons(image self, double seuil, quadtree q)
 		q->M1[j] = *(a+j);
 		q->M2[j] = *(b+j);
 		var[j] = (q->M2[j] - q->M1[j]*q->M1[j]/q->M0)/q->M0;
-		compare[j] = var[j] - seuil;
 	}
+
+	variance = (var[0] + var[1] + var[2])/3;
+	compare = variance - seuil;
+
+	free(b);
+	free(a);
+	free(nb_pixel);
+
 	
 	//On vérifie si la variance est bien supérieure au seuil
-	if( compare[0] > 0 && compare[1] > 0 && compare[2] > 0 )
+	if( compare > 0 )
 	{
 		//On vérifie que des moments sont calculables pour la récurrence
 		if(COORDX(q->supgauche) != COORDX(q->infdroit)-1 && COORDY(q->supgauche) != COORDY(q->infdroit)-1)
@@ -230,7 +246,99 @@ void split_image_sons(image self, double seuil, quadtree q)
 		}
 	}
 
-	free(b);
-	free(a);
-	free(nb_pixel);
+}
+
+booleen est_vide(quadtree arbre)
+{
+	if(arbre->sons[0] == NULL)
+		return vrai;
+
+	return faux;
+}
+
+quadtree create_default_quadtree(int xmin, int ymin, int xmax, int ymax, int hauteur)
+{
+	quadtree q = create_quadtree(xmin,ymin,xmax,ymax);
+
+	if(hauteur == 0)
+	{
+		return q;
+	}
+	else
+	{
+		q->sons[0] = create_default_quadtree(xmin, ymin, (xmin + xmax)/2, (ymin + ymax)/2, hauteur-1);
+		q->sons[1] = create_default_quadtree((xmin + xmax)/2, ymin, xmax, (ymin + ymax)/2, hauteur-1);
+		q->sons[2] = create_default_quadtree(xmin, (ymin + ymax)/2, (xmin + xmax)/2, ymax, hauteur-1);
+		q->sons[3] = create_default_quadtree((xmin + xmax)/2, (ymin + ymax)/2, xmax, ymax, hauteur-1);
+	}
+
+	return q;
+}
+
+void init_quadtree(quadtree q,image self)
+{
+	int j;
+	int* nb_pixel;
+	double* a,*b;
+
+	if(q != NULL)
+	{
+		nb_pixel = (int*) malloc(sizeof(int));
+		a = (double*) malloc (sizeof(double) * image_give_dim(self));
+		b = (double*) malloc (sizeof(double) * image_give_dim(self));
+
+		//On calcule les moments de l'image prédéfini
+		give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), COORDX(q->infdroit), COORDY(q->infdroit), nb_pixel, a,b);
+		
+		q->M0 = *nb_pixel;
+
+		for (j=0; j<3;j++)
+		{
+			q->M1[j] = *(a+j);
+			q->M2[j] = *(b+j);
+		}
+
+		free(b);
+		free(a);
+		free(nb_pixel);
+	}
+	else
+	{
+		init_quadtree(q->sons[0], self);
+		init_quadtree(q->sons[1], self);
+		init_quadtree(q->sons[2], self);
+		init_quadtree(q->sons[3], self);
+	}	
+}
+
+void update_quadtree(quadtree q, image self, double seuil)
+{
+	assert(self != NULL);
+
+	int j;
+	double variance, var[3];
+
+	for (j=0; j<3;j++)
+	{
+		var[j] = (q->M2[j] - q->M1[j]*q->M1[j]/q->M0)/q->M0;
+	}
+
+	variance = (var[0] + var[1] + var[2])/3;
+
+	if(variance < seuil)
+	{
+		delete_quadtree(q);
+	}
+	else if(variance > seuil && q == NULL)
+	{
+		quadtree_subdivide(q);
+	}
+	else if(q != NULL)
+	{
+		update_quadtree(q->sons[0],self,seuil);
+		//update_quadtree(q->sons[1],self,seuil);
+		//update_quadtree(q->sons[2],self,seuil);
+		//update_quadtree(q->sons[3],self,seuil);
+	}
+	
 }
