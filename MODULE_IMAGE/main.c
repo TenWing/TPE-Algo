@@ -5,83 +5,48 @@
 #include "point.h"
 #include "quadtree.h"
 
+#define IMAGE "../IMAGES/lenna.ppm"
+#define DESTINATION "../IMAGES/lenna_descend.ppm"
+#define DESCEND 1
+#define SEUIL 4000
+
 int main(int argc,char* argv[])
 {
+  // Création lecture et chargement de l'image
+  image picture = FAIRE_image();
 
-  image degrade=FAIRE_image();
-  //image_initialize(degrade,3,512,512);
-   
-  int color[3]={255,0,0};
-  int col[3];
-  int bleu[]={0,0,255};
-  Point milieu;
-  int * pix,nb_pix;
-  float sum[3]={0.0,0.0,0.0};
-  int i;
-  image_initialize(degrade,3,512,512);
-  image_debut(degrade);  // On se positionne au début
-  do
+  int ok = image_charger(picture, IMAGE);
+
+  if(ok == 0)
+  {
+    quadtree q;
+    if(DESCEND)
     {
-      do
-	{
-	  for(i=0;i<3;i++)
-		col[i]=color[i]/2;
-	  image_ecrire_pixel(degrade,col);
-	}
-      while(image_pixel_droite(degrade));// On  parcourt la ligne de gauche à droite
-      color[1]++;color[2]++;
+      // Traitement
+      q = split_image(picture, SEUIL);
     }
-  while(image_pixel_suivant(degrade)); // On passe à la ligne suivante
-
- COORDX(milieu)=0;
- COORDY(milieu)=255;
- image_move_to(degrade,&milieu);
-
-do
-{
-	image_ecrire_pixel(degrade,bleu);
-}
-while(image_pixel_droite(degrade));
-
-// calcul de la couleur moyenne de R par un parcour de l'image 
-  nb_pix=0;
-  image_debut(degrade);
-  do
+    else
     {
-      pix=image_lire_pixel(degrade);
-      nb_pix++;
-      for(i=0;i<DIM_MAX;i++)
-	sum[i]+=pix[i];
-    }
-  while(image_pixel_suivant(degrade));
- /* fprintf(stderr,"moyenne: (%f,%f,%f)\n",
-	  sum[0]/nb_pix,
-	  sum[1]/nb_pix,
-	  sum[2]/nb_pix);
-*/
+      q = create_default_quadtree(0, 0, image_give_largeur(picture)-1, image_give_hauteur(picture)-1, 4);
+      init_quadtree(q, picture);
+      update_quadtree(q, picture, SEUIL);
+    }    
 
+    unsigned char couleur[3];
+    couleur[0] = 0;
+    couleur[1] = 0;
+    couleur[2] = 0;
 
-  
-  // RAJOUT PAR NOUS  
-  quadtree q;
-  unsigned char* couleur;
-  couleur = (unsigned char*) malloc(sizeof(couleur) * 3);
-  couleur[0] = 0;
-  couleur[1] = 0;
-  couleur[2] = 0;
+    draw_quadtree(picture, q, couleur);
 
-  q=create_default_quadtree(0,0,512,512,6);
+    image_sauvegarder(picture, DESTINATION);
+    delete_quadtree(&q);
+  }
+  else
+    printf("Erreur d'ouverture d'image\n");
 
-  init_quadtree(q,degrade);
-
-  update_quadtree( q, degrade, 4000);
-
- // delete_quadtree(q); 
-
-  //free(q);
-  // EO RAJOUT PAR NOUS 
-
-  // image_to_stream(degrade,stdout);
-   DEFAIRE_image(degrade);
+  //image_to_stream(picture, stdout);
+  // libération mémoire
+  DEFAIRE_image(picture);
   return 0;
-}
+} 

@@ -51,7 +51,8 @@ quadtree create_son(quadtree q, Place p);
 struct quadtree
 {
 	quadtree sons[4];
-	double M0,M1[3],M2[3];
+	double M1[3],M2[3];
+	int M0;
 	Point supgauche, infdroit;
 };
 
@@ -75,6 +76,11 @@ quadtree create_quadtree(int supGaucheX, int supGaucheY, int infDroitX, int infD
 	self->infdroit.coordx = infDroitX;
 	self->infdroit.coordy = infDroitY;
 
+	// Le quadtree n'est pas initialisé
+	self->M0 = 0;
+	self->M1[0] = -1;
+	self->M2[0] = -1;
+
 	return self;
 }
 
@@ -89,24 +95,22 @@ void quadtree_subdivide(quadtree q)
 	}
 }
 
-void delete_quadtree(quadtree q)
+void delete_quadtree(quadtree* q)
 {
 	//Descente dans l'arbre
-	if(q->sons[0] != NULL)
+	if(!est_vide(*q))
 	{
-		delete_quadtree(q->sons[0]);
-		delete_quadtree(q->sons[1]);
-		delete_quadtree(q->sons[2]);
-		delete_quadtree(q->sons[3]);
+		quadtree tree = *q;
+		delete_quadtree(&(tree->sons[0]));
+		delete_quadtree(&(tree->sons[1]));
+		delete_quadtree(&(tree->sons[2]));
+		delete_quadtree(&(tree->sons[3]));
 	}
 	//Libération de la mémoire
 	else
 	{
-		free(q->sons[0]);
-		free(q->sons[1]);
-		free(q->sons[2]);
-		free(q->sons[3]);
-		free(q);
+		free(*q);
+		*q = NULL;
 	}
 }
 
@@ -141,14 +145,11 @@ void draw_quadtree(image self, quadtree arbre, unsigned char* couleur)
 		draw_quadtree(self,arbre->sons[1],couleur);
 		draw_quadtree(self,arbre->sons[2],couleur);
 		draw_quadtree(self,arbre->sons[3],couleur);
-
 	}
 	else
 	{
 		draw_square(self, COORDX(arbre->supgauche), COORDY(arbre->supgauche),
-			COORDX(arbre->infdroit)-1, COORDY(arbre->infdroit)-1, couleur);
-
-
+			COORDX(arbre->infdroit), COORDY(arbre->infdroit), couleur);
 	}
 }
 
@@ -202,35 +203,11 @@ quadtree create_son(quadtree q, Place p)
 
 void split_image_sons(image self, double seuil, quadtree q)
 {
-	int j;
-	int* nb_pixel;
-	double* a,*b;
-	double var[3],variance;
+	double variance;
 	double compare;
 
-	nb_pixel = (int*) malloc(sizeof(int));
-	a = (double*) malloc (sizeof(double) * image_give_dim(self));
-	b = (double*) malloc (sizeof(double) * image_give_dim(self));
-
-	//On calcule les moments de l'image prédéfini
-	give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), COORDX(q->infdroit), COORDY(q->infdroit), nb_pixel, a,b);
-	
-	q->M0 = *nb_pixel;
-
-	for (j=0; j<3;j++)
-	{
-		q->M1[j] = *(a+j);
-		q->M2[j] = *(b+j);
-		var[j] = (q->M2[j] - q->M1[j]*q->M1[j]/q->M0)/q->M0;
-	}
-
-	variance = (var[0] + var[1] + var[2])/3;
+	variance = calcule_variance(q, self);
 	compare = variance - seuil;
-
-	free(b);
-	free(a);
-	free(nb_pixel);
-
 	
 	//On vérifie si la variance est bien supérieure au seuil
 	if( compare > 0 )
@@ -277,30 +254,11 @@ quadtree create_default_quadtree(int xmin, int ymin, int xmax, int ymax, int hau
 
 void init_quadtree(quadtree q,image self)
 {
-	int j;
-	int* nb_pixel;
-	double* a,*b;
-
-	if(q != NULL)
+	if(est_vide(q))
 	{
-		nb_pixel = (int*) malloc(sizeof(int));
-		a = (double*) malloc (sizeof(double) * image_give_dim(self));
-		b = (double*) malloc (sizeof(double) * image_give_dim(self));
-
 		//On calcule les moments de l'image prédéfini
-		give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), COORDX(q->infdroit), COORDY(q->infdroit), nb_pixel, a,b);
-		
-		q->M0 = *nb_pixel;
-
-		for (j=0; j<3;j++)
-		{
-			q->M1[j] = *(a+j);
-			q->M2[j] = *(b+j);
-		}
-
-		free(b);
-		free(a);
-		free(nb_pixel);
+		give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), COORDX(q->infdroit),
+			COORDY(q->infdroit), &(q->M0), q->M1, q->M2);
 	}
 	else
 	{
@@ -313,32 +271,74 @@ void init_quadtree(quadtree q,image self)
 
 void update_quadtree(quadtree q, image self, double seuil)
 {
+	// Test pour continuer les fonctions
 	assert(self != NULL);
+	assert(q != NULL);	
 
-	int j;
-	double variance, var[3];
+	double variance = calcule_variance(q, self);
+	double compare = variance - seuil;
 
-	for (j=0; j<3;j++)
+	if(est_vide(q))
+	{
+		if(compare > 0)
+		{
+			quadtree_subdivide(q);
+		}
+	}
+	else
+	{
+		if(compare < 0)
+		{
+			delete_quadtree(&(q->sons[0]));
+			delete_quadtree(&(q->sons[1]));
+			delete_quadtree(&(q->sons[2]));
+			delete_quadtree(&(q->sons[3]));			
+		}
+		else
+		{
+			update_quadtree(q->sons[0], self, seuil);
+			update_quadtree(q->sons[1], self, seuil);
+			update_quadtree(q->sons[2], self, seuil);
+			update_quadtree(q->sons[3], self, seuil);
+		}
+	}
+}
+
+double calcule_variance(quadtree q, image self)
+{
+	// Test pour continuer les fonctions
+	assert(self != NULL);
+	assert(q != NULL);	
+
+	int j = 0, dim = image_give_dim(self);
+
+	// Les variances respectives en fonction de la dimension
+	double var[3];
+
+	// Calcul des moments que si c'est pas init
+	if(!est_init(q))
+		give_moments(self, COORDX(q->supgauche), COORDY(q->supgauche), 
+			COORDX(q->infdroit), COORDY(q->infdroit), &(q->M0), q->M1, q->M2);
+
+	// Ensuite on renvoie la variance
+	for(j = 0; j < dim; j++)
 	{
 		var[j] = (q->M2[j] - q->M1[j]*q->M1[j]/q->M0)/q->M0;
-	}
+	}	
 
-	variance = (var[0] + var[1] + var[2])/3;
+	// Renvoi différent en fonction de la dimension
+	if(dim > 1)
+		return ((var[0] + var[1] + var[2])/3);
+	else
+		return var[0];
+}
 
-	if(variance < seuil)
-	{
-		delete_quadtree(q);
-	}
-	else if(variance > seuil && q == NULL)
-	{
-		quadtree_subdivide(q);
-	}
-	else if(q != NULL)
-	{
-		update_quadtree(q->sons[0],self,seuil);
-		//update_quadtree(q->sons[1],self,seuil);
-		//update_quadtree(q->sons[2],self,seuil);
-		//update_quadtree(q->sons[3],self,seuil);
-	}
-	
+booleen est_init(quadtree q)
+{
+	assert(q != NULL);
+
+	if(q->M0 == 0 || q->M1[0] == -1 || q->M2[0] == -1)
+		return faux;
+
+	return vrai;
 }

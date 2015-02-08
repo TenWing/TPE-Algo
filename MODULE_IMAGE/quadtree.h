@@ -42,7 +42,7 @@ extern void quadtree_subdivide(quadtree q);
 * @version	1.0
 * @param	quadtree le quadtree à détruire
 */
-extern void delete_quadtree(quadtree q);
+extern void delete_quadtree(quadtree* q);
 
 /**
 * @brief	crée un quadtree en découpant une image avec des arguments de seuil
@@ -114,5 +114,9 @@ extern void init_quadtree(quadtree q,image self);
 * @param	seuil 	  le seuil pour la mise à jour
 */
 extern void update_quadtree(quadtree q, image self, double seuil);
+
+extern double calcule_variance(quadtree q, image self);
+
+extern booleen est_init(quadtree q);
 
 #endif

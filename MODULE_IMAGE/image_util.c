@@ -71,11 +71,17 @@ void draw_square(image self, int xmin, int ymin, int xmax, int ymax, unsigned ch
 {
 	int i,j;
 
+	printf("%d\n", xmax);
 	// Vérification des valeurs passées
+	/*
 	assert(xmin >= 0 && xmin < image_give_largeur(self));
 	assert(ymin >= 0 && ymin < image_give_hauteur(self));
 	assert(xmax >= 0 && xmax < image_give_largeur(self));
-	assert(ymax >= 0 && ymax < image_give_hauteur(self));
+	assert(ymax >= 0 && ymax < image_give_hauteur(self));*/
+	if(xmax >= image_give_largeur(self))
+		xmax = image_give_largeur(self)-1;
+	if(ymax >= image_give_hauteur(self))
+		ymax = image_give_hauteur(self)-1;
 
 
 	//On dessine les lignes horizontales
